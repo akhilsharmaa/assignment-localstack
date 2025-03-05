@@ -1,1 +1,1 @@
-{"statusCode": 200, "body": "Hello Bro!!!"}
+{"statusCode": 200, "body": "{\"message\": \"Hello Bro!!!\", \"time\": \"2025-03-05T16:12:03.414853\", \"event_source\": \"Unknown event source\"}"}

@@ -9,8 +9,8 @@ s3 = boto3.client('s3',
                 endpoint_url='http://localhost:4566'
             )
 
-bucket_name = 'test-bucket'
-image_path = './image2.jpg'
+bucket_name = 'test-bucket-2'
+image_path = './image.jpg'
 image_key = os.path.basename(image_path)
 
 try:
