@@ -47,6 +47,11 @@ awslocal s3 mb s3://test-bucket-2
 awslocal s3 ls        # list all the buckets  
 ```
 
+# Creating the ZIP 
+```
+zip -r lambda-function.zip lambda_function.py
+```
+
 
 ### Creating the lambda function 
 This is going to create a lambda function named `dummy_lambda_7` with the zip file `lambda-function.zip` and the set runtime as `python3.9`, and other configurations.   
@@ -57,6 +62,23 @@ awslocal lambda create-function \
   --handler lambda_function.lambda_handler \
   --runtime python3.9 \
   --role arn:aws:iam::000000000000:role/execution_role
+```
+
+## Adding Python packages as `lambda layer`
+
+```
+mkdir -p lambda-layer/python
+cd lambda-layer/python
+pip install pandas -t .
+cd ..
+zip -r lambda-layer.zip python
+```
+Adding the layer to local stack  
+```
+awslocal lambda publish-layer-version \
+  --layer-name my-dependency-layer \
+  --zip-file fileb://lambda-layer.zip \
+  --compatible-runtimes python3.9
 ```
 
 ### (Optional) Invoking the lamdba function 
@@ -85,21 +107,12 @@ awslocal s3api put-bucket-notification-configuration \
   }'
 ```
 
-
 ---
 ### IMPORTANT COMMANDS
 
 ```
 /tmp/lambda/awslambda-us-east-1-tasks/dummy_lambda_4-d68245ec-7b6c-4e1a-8f25-102a05acd56d/code/lambda-function
 ``` 
-# Invoking the lamdba 
-
-```
-awslocal lambda invoke \
-    --function-name dummy_lambda_7 \
-    --payload '{}' \
-    response.json
-```
 
 
 
@@ -114,11 +127,6 @@ awslocal lambda delete-function --function-name dummy_lambda_7
 awslocal logs describe-log-streams --log-group-name /aws/lambda/dummy_lambda_7 --order-by LastEventTime --descending
 ```
 
-
-# Creating the ZIP 
-```
-zip -r lambda-function.zip lambda_function.py
-```
 
 
 # Dynamically getting the latest log of the lamda 

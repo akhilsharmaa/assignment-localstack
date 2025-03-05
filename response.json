@@ -1,1 +1,1 @@
-{"statusCode": 200, "body": "{\"message\": \"Hello Bro!!!\", \"time\": \"2025-03-05T16:12:03.414853\", \"event_source\": \"Unknown event source\"}"}
+{"errorMessage": "Unable to import module 'lambda_function': No module named 'pandas'", "errorType": "Runtime.ImportModuleError", "requestId": "", "stackTrace": []}
