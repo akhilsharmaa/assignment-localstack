@@ -4,10 +4,9 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Request
 import uvicorn
 
 app = FastAPI(
-    title="Uplyft Assignment"  # This sets the title of the FastAPI docs
+    title="Uplyft Assignment" 
 )
 
-# Configure boto3 to use LocalStack
 s3 = boto3.client(
     's3',
     region_name='us-east-1',
@@ -19,8 +18,21 @@ s3 = boto3.client(
 BUCKET_NAME = "test-bucket-2"
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
 
+
+def create_bucket_if_not_exists():
+    try:
+        # Checking the bucket exists or not 
+        s3.head_bucket(Bucket=BUCKET_NAME)  
+    except Exception:
+        s3.create_bucket(Bucket=BUCKET_NAME)
+        print(f"Bucket '{BUCKET_NAME}' created.")
+
+
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
+    
+    create_bucket_if_not_exists()
+
     try:
         # Check file extension
         if not file.filename.endswith(".csv"):
