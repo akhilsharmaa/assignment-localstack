@@ -3,6 +3,31 @@ import boto3
 from datetime import datetime
 
 s3 = boto3.client('s3')
+dynamodb = boto3.resource('dynamodb')
+
+TABLE_NAME = "files-db" 
+
+def create_table_if_not_exist(): 
+    try:
+        response = dynamodb.create_table(
+            TableName=TABLE_NAME,
+            KeySchema=[{"AttributeName": "filename", "KeyType": "HASH"}],
+            AttributeDefinitions=[{"AttributeName": "filename", "AttributeType": "S"}],
+            BillingMode="PAY_PER_REQUEST"
+        )
+        print("Table creation started:", response)
+    except Exception as e:
+        print("Error creating table:", str(e))
+
+def write_to_dynamodb(data):
+    try:
+        table = dynamodb.Table(TABLE_NAME)
+        table.put_item(Item=data)
+
+        print("Data successfully written to DynamoDB")
+    except Exception as e:
+        print(f"Error writing to DynamoDB: {str(e)}")
+            
 
 def lambda_handler(event, context):
     try:
@@ -18,12 +43,12 @@ def lambda_handler(event, context):
         csv_content = response['Body'].read().decode('utf-8')
 
         # Extract metadata
-        file_size = response['ContentLength']  # File size in bytes
-        lines = csv_content.strip().split("\n")  # Splitting into lines
-        num_lines = len(lines) - 1  # Row count (excluding header)
-        column_names = lines[0].split(",")  # Extract column names
-        num_columns = len(column_names)  # Column count
-        upload_timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')  # Current timestamp
+        file_size = response['ContentLength']  
+        lines = csv_content.strip().split("\n") 
+        num_lines = len(lines) - 1  
+        column_names = lines[0].split(",") 
+        num_columns = len(column_names) 
+        upload_timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
 
         metadata = {
             "filename": key,
@@ -33,6 +58,9 @@ def lambda_handler(event, context):
             "column_count": num_columns,
             "column_names": column_names
         }
+
+        create_table_if_not_exist(); 
+        write_to_dynamodb(metadata)
 
         print(metadata)
 

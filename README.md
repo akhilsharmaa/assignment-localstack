@@ -107,6 +107,17 @@ awslocal s3api put-bucket-notification-configuration \
   }'
 ```
 
+### View dynamodb Table 
+```
+awslocal dynamodb list-tables    # list the tables in dynamodb 
+awslocal dynamodb scan --table-name files-db
+```
+
+### 
+```
+awslocal dynamodb scan --table-name files-db
+```
+
 ---
 ### IMPORTANT COMMANDS
 
