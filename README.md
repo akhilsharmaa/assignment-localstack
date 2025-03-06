@@ -1,5 +1,5 @@
 # Assigment Submission of `Uplyft`
-
+![Screenshot from 2025-03-06 22-49-39](https://github.com/user-attachments/assets/2ecfa989-48c0-479f-80fe-dcfd5773fde6)
 
 # SETUP 
 # (Pre-req) Install docker, localstack, aws-cli
@@ -13,6 +13,7 @@ Expected output:
      __                     _______ __             __
     / /   ____  _________ _/ / ___// /_____ ______/ /__
    / /   / __ \/ ___/ __ `/ /\__ \/ __/ __ `/ ___/ //_/
+
   / /___/ /_/ / /__/ /_/ / /___/ / /_/ /_/ / /__/ ,<
  /_____/\____/\___/\__,_/_//____/\__/\__,_/\___/_/|_|
 
