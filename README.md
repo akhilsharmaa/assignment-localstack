@@ -40,6 +40,12 @@ echo "alias awslocal='aws --endpoint-url=http://localhost:4566'" >> ~/.bashrc
 ---
 
 
+### Create a `s3` bucket
+This is going to create a bucket named `test-bucket` inside the s3.  
+```
+awslocal s3 mb s3://test-bucket-2 
+```
+
 ### Creating the lambda function 
 This is going to create a lambda function named `dummy_lambda_7` with the zip file `lambda-function.zip` and the set runtime as `python3.9`, and other configurations.   
 ```
@@ -105,11 +111,6 @@ awslocal lambda invoke \
 ```
 
 
-### Create a `s3` bucket
-This is going to create a bucket named `test-bucket` inside the s3.  
-```
-awslocal s3 mb s3://test-bucket-2 
-```
 
 ### (Optional) list all the buckets 
 ```
