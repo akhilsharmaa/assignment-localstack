@@ -1,5 +1,8 @@
+# Assigment Submission of `Uplyft`
+
+
 # SETUP 
-#### (Pre-req) Install docker, localstack, aws-cli
+# (Pre-req) Install docker, localstack, aws-cli
 ```
 # Now start localstack in you system 
 localstack start  
@@ -36,22 +39,6 @@ echo "alias awslocal='aws --endpoint-url=http://localhost:4566'" >> ~/.bashrc
 ```
 ---
 
-### Create a `s3` bucket
-This is going to create a bucket named `test-bucket` inside the s3.  
-```
-awslocal s3 mb s3://test-bucket-2 
-```
-
-### (Optional) list all the buckets 
-```
-awslocal s3 ls        # list all the buckets  
-```
-
-# Creating the ZIP 
-```
-zip -r lambda-function.zip lambda_function.py
-```
-
 
 ### Creating the lambda function 
 This is going to create a lambda function named `dummy_lambda_7` with the zip file `lambda-function.zip` and the set runtime as `python3.9`, and other configurations.   
@@ -62,33 +49,6 @@ awslocal lambda create-function \
   --handler lambda_function.lambda_handler \
   --runtime python3.9 \
   --role arn:aws:iam::000000000000:role/execution_role
-```
-
-## Adding Python packages as `lambda layer`
-
-```
-mkdir -p lambda-layer/python
-cd lambda-layer/python
-pip install pandas -t .
-cd ..
-zip -r lambda-layer.zip python
-```
-Adding the layer to local stack  
-```
-awslocal lambda publish-layer-version \
-  --layer-name my-dependency-layer \
-  --zip-file fileb://lambda-layer.zip \
-  --compatible-runtimes python3.9
-```
-
-### (Optional) Invoking the lamdba function 
-check whether the lambda function is working properly, this command return output in `response.json`. check the file content.   
-
-```
-awslocal lambda invoke \
-    --function-name dummy_lambda_7 \
-    --payload '{}' \
-    response.json
 ```
 
 
@@ -107,6 +67,12 @@ awslocal s3api put-bucket-notification-configuration \
   }'
 ```
 
+# Just run the fastapi server 
+```
+uvicorn server:app --reload
+```
+now you should be able to access the backend at http://127.0.0.1:8000/docs
+
 ### View dynamodb Table 
 ```
 awslocal dynamodb list-tables    # list the tables in dynamodb 
@@ -118,8 +84,38 @@ awslocal dynamodb scan --table-name files-db
 awslocal dynamodb scan --table-name files-db
 ```
 
+
 ---
 ### IMPORTANT COMMANDS
+
+
+# Creating the ZIP 
+```
+zip -r lambda-function.zip lambda_function.py
+```
+
+### (Optional) Invoking the lamdba function 
+check whether the lambda function is working properly, this command return output in `response.json`. check the file content.   
+
+```
+awslocal lambda invoke \
+    --function-name dummy_lambda_7 \
+    --payload '{}' \
+    response.json
+```
+
+
+### Create a `s3` bucket
+This is going to create a bucket named `test-bucket` inside the s3.  
+```
+awslocal s3 mb s3://test-bucket-2 
+```
+
+### (Optional) list all the buckets 
+```
+awslocal s3 ls        # list all the buckets  
+```
+
 
 ```
 /tmp/lambda/awslambda-us-east-1-tasks/dummy_lambda_4-d68245ec-7b6c-4e1a-8f25-102a05acd56d/code/lambda-function
