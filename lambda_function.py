@@ -27,7 +27,7 @@ def write_to_dynamodb(data):
         print("Data successfully written to DynamoDB")
     except Exception as e:
         print(f"Error writing to DynamoDB: {str(e)}")
-            
+        
 
 def lambda_handler(event, context):
     try:
