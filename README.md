@@ -73,7 +73,16 @@ awslocal s3api put-bucket-notification-configuration \
   }'
 ```
 
-# Just run the fastapi server 
+
+### install dependency 
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+
+# Run the fastapi server 
 ```
 uvicorn server:app --reload
 ```
