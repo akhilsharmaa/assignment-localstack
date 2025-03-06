@@ -10,7 +10,7 @@ s3 = boto3.client('s3',
             )
 
 bucket_name = 'test-bucket-2'
-image_path = './data/test24mb.csv'
+image_path = './data/test167kb.csv'
 image_key = os.path.basename(image_path)
 
 try:

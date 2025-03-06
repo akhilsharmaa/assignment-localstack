@@ -1,17 +1,13 @@
 import json
 import boto3
-import pandas as pd
-import io
-import traceback
+from datetime import datetime
 
 s3 = boto3.client('s3')
-dynamodb = boto3.resource('dynamodb')
 
 def lambda_handler(event, context):
     try:
         print("lambda_handler is running...")
 
-        # Get the S3 bucket name and file key from the Lambda event
         bucket = event['Records'][0]['s3']['bucket']['name']
         key = event['Records'][0]['s3']['object']['key']
 
@@ -21,13 +17,28 @@ def lambda_handler(event, context):
         response = s3.get_object(Bucket=bucket, Key=key)
         csv_content = response['Body'].read().decode('utf-8')
 
-        # Convert CSV data into a pandas DataFrame
-        df = pd.read_csv(io.StringIO(csv_content))
-        
+        # Extract metadata
+        file_size = response['ContentLength']  # File size in bytes
+        lines = csv_content.strip().split("\n")  # Splitting into lines
+        num_lines = len(lines) - 1  # Row count (excluding header)
+        column_names = lines[0].split(",")  # Extract column names
+        num_columns = len(column_names)  # Column count
+        upload_timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')  # Current timestamp
+
+        metadata = {
+            "filename": key,
+            "upload_timestamp": upload_timestamp,
+            "file_size_bytes": file_size,
+            "row_count": num_lines,
+            "column_count": num_columns,
+            "column_names": column_names
+        }
+
+        print(metadata)
 
         return {
             'statusCode': 200,
-            'body': json.dumps(f'Successfully processed {key} from bucket {bucket}, csv length:: {len(df)}')
+            'body': json.dumps(metadata)
         }
     
     except Exception as e:
